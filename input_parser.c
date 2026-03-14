@@ -1,58 +1,71 @@
-#include "myshell.h"
+#include <myshell.h>
+#include <ctype.h>
+#include <string.h>
 
 char** parse_input(char* input)
 {
     size_t buffer_size = MAX_INPUT;
     char** tokens = malloc(buffer_size * sizeof(char*));
-    char* token = NULL;
     size_t position = 0;
-    size_t token_length = 0;
+    size_t i = 0;
 
-    if(!tokens) 
+    if (!tokens)
     {
-        perror("Malloc");
+        perror("malloc");
         exit(1);
     }
 
-    // Loop through each character in the input string
-    for (size_t i = 0; input[i]; i++)    
+    while (input[i])
     {
-        // Skip leading whitesapce characters ' ' \n \t \r \a
-        while (input[i] == ' ' || input[i] == '\n' || input[i] == '\t' || input[i] == '\r' || input[i] == '\a')
-        {
+        // Skip whitespace
+        while (input[i] && isspace(input[i]))
             i++;
-        }
 
-        if(input[i] == '\0') break;
+        if (!input[i])
+            break;
 
-        token = &input[i];
+        char* start = &input[i];
+        size_t token_length = 0;
 
-        while (input[i] != '\0' && input[i] != ' ' && input[i] != '\n' && input[i] != '\t' && input[i] != '\r' && input[i] != '\a')
+        // Find token length
+        while (input[i] && !isspace(input[i]))
         {
             token_length++;
             i++;
         }
 
-        tokens[position] = malloc((token_length + 1) * sizeof(char));
-
-        if(!tokens[position]) 
+        // Resize tokens array if needed
+        if (position >= buffer_size - 1)
         {
-            perror("Malloc");
+            buffer_size *= 2;
+            tokens = realloc(tokens, buffer_size * sizeof(char*));
+
+            if (!tokens)
+            {
+                perror("realloc");
+                exit(1);
+            }
+        }
+
+        // Allocate memory for token
+        tokens[position] = malloc(token_length + 1);
+
+        if (!tokens[position])
+        {
+            perror("malloc");
             exit(1);
         }
 
-        for (size_t j = 0; j < token_length; j++)
-        {
-            tokens[position][j] = token[j];
-        }
-        tokens[position][token_length] = '\0'; // Null terminate token
+        memcpy(tokens[position], start, token_length);
+        tokens[position][token_length] = '\0';
+
         position++;
-        token_length = 0; // Reset for next token     
     }
-    
-    tokens[position] = NULL; // Terminate the array with NULL
+
+    tokens[position] = NULL;
     return tokens;
 }
+
 
 // Free allocated tokens
 void free_tokens(char** tokens)
@@ -60,9 +73,8 @@ void free_tokens(char** tokens)
     if (!tokens)
         return;
 
-    for (size_t i = 0; tokens[i]; i++) {
-        free(tokens[i]); // Free each token
-    }
+    for (size_t i = 0; tokens[i]; i++)
+        free(tokens[i]);
 
-    free(tokens); // Free the tokens array
+    free(tokens);
 }
