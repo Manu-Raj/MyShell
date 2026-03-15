@@ -1,8 +1,25 @@
-Test/
+# OS / Editor
 .vscode/
-*.o
-*.out
-*.exe
-a.out
+
+# Test folders
+Test/
+
+# Build directories
 build/
+
+# Object files
+*.o
+
+# Executables (Linux / Unix)
+*.out
+a.out
+myshell
+
+# Windows executables
+*.exe
+
+# Mac executables
+*.app
+
+# Build scripts
 build.sh
