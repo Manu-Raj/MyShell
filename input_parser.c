@@ -2,10 +2,10 @@
 #include <ctype.h>
 #include <string.h>
 
-char** parse_input(char* input)
+char **parse_input(char *input)
 {
     size_t buffer_size = MAX_INPUT;
-    char** tokens = malloc(buffer_size * sizeof(char*));
+    char **tokens = malloc(buffer_size * sizeof(char *));
     size_t position = 0;
     size_t i = 0;
 
@@ -24,7 +24,7 @@ char** parse_input(char* input)
         if (!input[i])
             break;
 
-        char* start = &input[i];
+        char *start = &input[i];
         size_t token_length = 0;
 
         // Find token length
@@ -38,7 +38,7 @@ char** parse_input(char* input)
         if (position >= buffer_size - 1)
         {
             buffer_size *= 2;
-            tokens = realloc(tokens, buffer_size * sizeof(char*));
+            tokens = realloc(tokens, buffer_size * sizeof(char *));
 
             if (!tokens)
             {
@@ -66,9 +66,8 @@ char** parse_input(char* input)
     return tokens;
 }
 
-
 // Free allocated tokens
-void free_tokens(char** tokens)
+void free_tokens(char **tokens)
 {
     if (!tokens)
         return;
