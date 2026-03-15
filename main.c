@@ -44,20 +44,19 @@ void shell_loop(char **env)
 
     while (1)
     {
-        // printf("[%s@myshell] :: %s>\n$ ",username,initial_directory);
-        printf("[myshell]>> $ ");
-        if (readline(input, input_size, stdin) == -1)
-        {
-            break;
-        }
+        printf("[myshell]>> ");
 
-        // printf("Input:%s",input);
+        if (readline(input, input_size, stdin) == -1)
+            break;
+
         args = parse_input(input);
 
         if (args[0] != NULL)
         {
             shell_builts(args, env, initial_directory);
         }
+
+        free_tokens(args);
     }
 }
 
@@ -67,6 +66,7 @@ int main(int argc, char **argv, char **env)
     (void)argc;
     (void)argv;
 
+    command_clear(NULL, NULL);
     shell_loop(env);
 
     return 0;
