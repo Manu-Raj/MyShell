@@ -15,6 +15,7 @@ build/
 *.out
 *.app
 *.bin
+myshell
 
 # Default gcc outputs
 a.out
