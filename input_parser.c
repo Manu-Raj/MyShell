@@ -38,13 +38,14 @@ char **parse_input(char *input)
         if (position >= buffer_size - 1)
         {
             buffer_size *= 2;
-            tokens = realloc(tokens, buffer_size * sizeof(char *));
-
-            if (!tokens)
+            char **tmp = realloc(tokens, buffer_size * sizeof(char *));
+            if (!tmp)
             {
                 perror("realloc");
+                free(tokens);
                 exit(1);
             }
+            tokens = tmp;
         }
 
         // Allocate memory for token
