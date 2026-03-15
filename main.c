@@ -1,12 +1,13 @@
 #include "myshell.h"
 
-
+// Function definitions 
 void shell_loop(char**);
-int getline(char *, size_t, FILE *);
+int readline(char *, size_t, FILE *);
+int shell_builts(char**,char **,char*);
 
 
 
-int getline(char *buf, size_t size, FILE *stream){
+int readline(char *buf, size_t size, FILE *stream){
     int c;
     size_t i = 0;
 
@@ -35,24 +36,30 @@ void shell_loop(char** env){
     char input[MAX_INPUT];
     size_t input_size = sizeof(input);
 
-
+    char* initial_directory=getcwd(NULL,0);
+    char *username = getenv("USERNAME");
     char** args;
 
     while (1)
     {
-        printf("myshell>> ");
-        if(getline(input,input_size,stdin)==-1){
+        //printf("[%s@myshell] :: %s>\n$ ",username,initial_directory);
+        printf("[myshell]>> $ ");
+        if(readline(input,input_size,stdin)==-1){
             break;
         }
 
         //printf("Input:%s",input);
         args=parse_input(input);
 
+        if(args[0]!=NULL){
+            shell_builts(args,env,initial_directory);
+        }
 
     }
     
 }
 
+//  main
 int main(int argc, char** argv, char** env){
     (void)argc;
     (void)argv;

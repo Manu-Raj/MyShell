@@ -5,3 +5,4 @@ Test/
 *.exe
 a.out
 build/
+build.sh
