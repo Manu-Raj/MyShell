@@ -1,4 +1,4 @@
-# OS / Editor
+# Editor
 .vscode/
 
 # Test folders
@@ -10,16 +10,14 @@ build/
 # Object files
 *.o
 
-# Executables (Linux / Unix)
-*.out
-a.out
-myshell
-
-# Windows executables
+# Executables
 *.exe
-
-# Mac executables
+*.out
 *.app
+*.bin
+
+# Default gcc outputs
+a.out
 
 # Build scripts
 build.sh
