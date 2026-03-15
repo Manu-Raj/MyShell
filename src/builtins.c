@@ -4,12 +4,14 @@ extern builtin_cmd command_table[];
 
 int command_exit(char **args, char **env)
 {
+    (void)args;
+    (void)env;
     exit(EXIT_SUCCESS);
-    return 0;
 }
 
 int command_cd(char **args, char **env)
 {
+    (void)env;
     static char prev_dir[1024] = "";
     char cwd[1024];
     char *target;
@@ -67,17 +69,22 @@ int command_cd(char **args, char **env)
 
 int command_clear(char **args, char **env)
 {
+    (void)args;
+    (void)env;
     printf("\033[H\033[J");
     return 0;
 }
 
 int command_pwd(char **args, char **env)
 {
-    char cwd[1024];
+    (void)args;
+    (void)env;
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    char *cwd = getcwd(NULL, 0);
+    if (cwd)
     {
         printf("%s\n", cwd);
+        free(cwd);
     }
     else
     {
@@ -89,6 +96,7 @@ int command_pwd(char **args, char **env)
 
 int command_echo(char **args, char **env)
 {
+    (void)env;
     int i = 1;
 
     while (args[i] != NULL)
@@ -108,6 +116,9 @@ int command_echo(char **args, char **env)
 
 int command_env(char **args, char **env)
 {
+    (void)args;
+    if (!env)
+        return 1;
     int i = 0;
 
     while (env[i] != NULL)
@@ -121,21 +132,25 @@ int command_env(char **args, char **env)
 
 int command_which(char **args, char **env)
 {
-  printf("work to be done\n");
-  return 0;
+    (void)args;
+    (void)env;
+    printf("work to be done\n");
+    return 0;
 }
 
 int display_help(char **args, char **env)
 {
-    printf("MyShell Built-in Commands:\n");
-    printf("  cd [dir]     Change directory\n");
-    printf("  pwd          Print current directory\n");
-    printf("  echo [text]  Print text\n");
-    printf("  env          Show environment variables\n");
-    printf("  which [cmd]  Locate command in PATH\n");
-    printf("  clear | cls  Clear the shell\n");
-    printf("  help         Display this help\n");
-    printf("  exit | quit  Exit the shell\n");
-
+    (void)args;
+    (void)env;
+    printf(
+        "MyShell Built-in Commands:\n"
+        "  cd [dir]     Change directory\n"
+        "  pwd          Print current directory\n"
+        "  echo [text]  Print text\n"
+        "  env          Show environment variables\n"
+        "  which [cmd]  Locate command in PATH\n"
+        "  clear | cls  Clear the shell\n"
+        "  help         Display this help\n"
+        "  exit | quit  Exit the shell\n");
     return 0;
 }

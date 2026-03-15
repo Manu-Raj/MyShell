@@ -15,6 +15,7 @@ builtin_cmd command_table[] = {
 
 int shell_builts(char **args, char **env, char *initial_directory)
 {
+    (void)initial_directory;
 
     for (int i = 0; command_table[i].name != NULL; i++)
     {
