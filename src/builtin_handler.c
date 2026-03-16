@@ -9,6 +9,8 @@ builtin_cmd command_table[] = {
     {"env", command_env},
     {"which", command_which},
     {"help", display_help},
+    {"about", command_about},
+    {"custom", command_custom},
     {"exit", command_exit},
     {"quit", command_exit},
     {NULL, NULL}};

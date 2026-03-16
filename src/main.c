@@ -4,6 +4,7 @@
 void shell_loop(char **);
 int readline(char *, size_t, FILE *);
 int shell_builts(char **, char **, char *);
+char *shell_format="[myshell]>> ";
 
 int readline(char *buf, size_t size, FILE *stream)
 {
@@ -44,7 +45,7 @@ void shell_loop(char **env)
 
     while (1)
     {
-        printf("[myshell]>> ");
+        printf("%s", shell_format);
 
         if (readline(input, input_size, stdin) == -1)
             break;

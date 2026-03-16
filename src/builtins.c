@@ -1,6 +1,7 @@
 #include "myshell.h"
 
 extern builtin_cmd command_table[];
+extern char *shell_format;
 
 int command_exit(char **args, char **env)
 {
@@ -136,6 +137,137 @@ int command_which(char **args, char **env)
     (void)env;
     printf("work to be done\n");
     return 0;
+}
+
+int command_custom(char **args, char **env)
+{
+    (void)args;
+    (void)env;
+
+    char buf[16];
+    int choice;
+
+    char cwd[PATH_MAX];
+    char *host;
+    char *user;
+
+#ifndef _WIN32
+    static char hostbuf[64];
+#endif
+
+    static char prompt[PATH_MAX + 128];
+
+    printf(
+        "MyShell Custom prompt styles:\n\n"
+        " 1   [myshell]>>\n"
+        " 2   user@host$\n"
+        " 3   user@host:~/dir$\n"
+        " 4   [user@host]$\n"
+        " 5   user@host ➜ ~/dir $\n"
+        " 6   [myshell|~/dir]$\n"
+        " 7   ┌─ user@host ~/dir\n"
+        "     └─$\n"
+        " 8   ╭─ user@host ~/dir\n"
+        "     ╰─$\n"
+    );
+
+    printf("\nSelect prompt style (1-8): ");
+
+    if (!fgets(buf, sizeof(buf), stdin))
+        return 1;
+
+    choice = atoi(buf);
+
+    if (choice < 1 || choice > 8)
+    {
+        printf("Invalid selection.\n");
+        return 1;
+    }
+
+    /* Fetch system information */
+
+#ifdef _WIN32
+    user = getenv("USERNAME");
+    host = getenv("COMPUTERNAME");
+#else
+    user = getenv("USER");
+    gethostname(hostbuf, sizeof(hostbuf));
+    host = hostbuf;
+#endif
+
+    if (!user)
+        user = "user";
+
+    if (!host)
+        host = "host";
+
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+        strcpy(cwd, "?");
+
+    /* Build prompt */
+
+    switch (choice)
+    {
+    case 1:
+        snprintf(prompt, sizeof(prompt), "[myshell]>> ");
+        break;
+
+    case 2:
+        snprintf(prompt, sizeof(prompt), "%s@%s$ ", user, host);
+        break;
+
+    case 3:
+        snprintf(prompt, sizeof(prompt), "%s@%s:%s$ ", user, host, cwd);
+        break;
+
+    case 4:
+        snprintf(prompt, sizeof(prompt), "[%s@%s]$ ", user, host);
+        break;
+
+    case 5:
+        snprintf(prompt, sizeof(prompt), "%s@%s ➜ %s $ ", user, host, cwd);
+        break;
+
+    case 6:
+        snprintf(prompt, sizeof(prompt), "[myshell|%s]$ ", cwd);
+        break;
+
+    case 7:
+        snprintf(prompt, sizeof(prompt),
+                 "┌─ %s@%s %s\n└─$ ",
+                 user, host, cwd);
+        break;
+
+    case 8:
+        snprintf(prompt, sizeof(prompt),
+                 "╭─ %s@%s %s\n╰─$ ",
+                 user, host, cwd);
+        break;
+    }
+
+    shell_format = prompt;
+
+    printf("Prompt updated.\n");
+
+    return 0;
+}
+
+int command_about(char **args, char **env)
+{
+    (void)args;
+    (void)env;
+    printf(
+        "---------------------------------------------------\n"
+        "               MyShell\n"
+        "---------------------------------------------------\n"
+        "A minimal Unix-like command line shell written in C.\n"
+        "It demonstrates core OS concepts including process\n"
+        "creation (fork), program execution (execve), and\n"
+        "process management (waitpid).\n\n"
+        "Supports external commands and built-in commands\n"
+        "such as cd, pwd, echo, env, and exit.\n\n"
+        "Developed by: Manu Raj\n"
+        "---------------------------------------------------\n");
 }
 
 int display_help(char **args, char **env)

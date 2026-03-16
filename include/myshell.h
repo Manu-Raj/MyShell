@@ -7,6 +7,9 @@
 
 #define MAX_INPUT 1024
 
+// Shell format
+extern char *shell_format;
+
 // input_parser
 char **parse_input(char *input);
 void free_tokens(char **tokens);
@@ -27,6 +30,8 @@ int command_cd(char **args, char **env);
 int command_pwd(char **args, char **env);
 int command_echo(char **args, char **env);
 int command_env(char **args, char **env);
+int command_about(char **args, char **env);
+int command_custom(char **args, char **env);
 int command_which(char **args, char **env);
 int command_clear(char **args, char **env);
 
