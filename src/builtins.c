@@ -275,14 +275,18 @@ int display_help(char **args, char **env)
     (void)args;
     (void)env;
     printf(
-        "MyShell Built-in Commands:\n"
-        "  cd [dir]     Change directory\n"
-        "  pwd          Print current directory\n"
-        "  echo [text]  Print text\n"
-        "  env          Show environment variables\n"
-        "  which [cmd]  Locate command in PATH\n"
-        "  clear | cls  Clear the shell\n"
-        "  help         Display this help\n"
-        "  exit | quit  Exit the shell\n");
+        "\nMyShell Built-in Commands:\n"
+        "------------------------------------------------------\n"
+        "  cd [dir]       Change the current directory\n"
+        "  pwd            Print the current working directory\n"
+        "  echo [text]    Display text in the terminal\n"
+        "  env            Show environment variables\n"
+        "  which [cmd]    Locate a command in PATH\n"
+        "  clear | cls    Clear the terminal screen\n"
+        "  custom         Customize the shell prompt style\n"
+        "  about          Display information about MyShell\n"
+        "  help           Display this help message\n"
+        "  exit | quit    Exit MyShell\n"
+        "------------------------------------------------------\n");
     return 0;
 }
