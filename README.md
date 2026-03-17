@@ -1,117 +1,162 @@
 # MyShell
 
-**MyShell** is a lightweight Unix-like command line shell written in
-**C**.\
-It provides a minimal interactive environment capable of executing
-external programs and handling several built-in commands while
-demonstrating core operating system concepts.
-
-MyShell focuses on clarity and simplicity while maintaining a structure
-similar to traditional Unix shells.
+MyShell is a lightweight, modular Unix-like command-line interpreter
+written in C. It demonstrates core operating system concepts such as
+process creation, program execution, and command parsing, while adhering
+closely to standard UNIX shell semantics.
 
 ------------------------------------------------------------------------
 
-## Features
+## Platform Requirements
 
--   Execution of external programs
--   Built-in command support
--   Basic command parsing
--   Command history and interactive input via **GNU Readline**
--   Customizable shell prompt styles
--   UTF-8 prompt rendering
--   Modular project structure
+This project targets Unix-like environments only.
+
+### Supported
+
+-   Linux (recommended)
+-   macOS
+-   Windows via Windows Subsystem for Linux (WSL)
+
+### Not Supported
+
+-   Native Windows Command Prompt (CMD)
+-   PowerShell
+
+------------------------------------------------------------------------
+
+## Key Features
+
+### Core Execution Model
+
+-   Process creation using `fork()`
+-   Program execution using `execve()`
+-   Process synchronization via `waitpid()`
+
+### Command Resolution
+
+-   PATH-based command lookup using `execve()`
+-   No use of `access()` pre-checks (avoids TOCTOU race conditions)
+-   Accurate error reporting (e.g., permission denied vs command not
+    found)
+
+------------------------------------------------------------------------
+
+## Built-in Commands
+
+| Command        | Description                                   | Usage Examples        |
+|----------------|-----------------------------------------------|----------------------|
+| `cd`           | Change current directory                      | `cd`, `cd ~`, `cd -` |
+| `pwd`          | Print current working directory               | `pwd`                |
+| `echo`         | Print arguments to standard output            | `echo Hello World`   |
+| `env`          | Display environment variables                 | `env`                |
+| `history`      | Show command history (GNU Readline)           | `history`            |
+| `clear`, `cls` | Clear the terminal screen                     | `clear`              |
+| `custom`       | Customize the shell prompt style              | `custom`             |
+| `help`         | Display usage guide for built-in commands     | `help`               |
+| `about`        | Show information about MyShell                | `about`              |
+| `exit`, `quit` | Terminate the shell session                   | `exit`               |
+
+------------------------------------------------------------------------
+
+## Architecture
+
+    src/
+    ├── main.c              # Main loop (read → parse → execute)
+    ├── input_parser.c      # Tokenization
+    ├── builtin_handler.c   # Built-in dispatch
+    ├── builtins.c          # Built-in implementations
+    ├── executor.c          # Process execution logic
+    include/
+    └── myshell.h
+
+### Execution Flow
+
+    readline → parse_input → shell_builts
+        → builtin execution (no fork)
+        → external execution (fork → execve → waitpid)
 
 ------------------------------------------------------------------------
 
 ## Dependencies
 
-MyShell requires the **GNU Readline library** for command input editing
-and history support.
-
-Install the development package before building.
-
 ### Ubuntu / Debian
 
 ``` bash
-sudo apt install libreadline-dev
+sudo apt update
+sudo apt install build-essential libreadline-dev
 ```
 
+### Arch Linux
 
-------------------------------------------------------------------------
-## Built-in Commands
-
-| Command | Description |
-|--------|-------------|
-| `cd [dir]` | Change the current directory |
-| `pwd` | Display the current working directory |
-| `echo [text]` | Print text to the terminal |
-| `env` | Show environment variables |
-| `which [cmd]` | Locate a command in the system PATH |
-| `clear` / `cls` | Clear the terminal screen |
-| `custom` | Select a custom shell prompt style |
-| `about` | Display information about MyShell |
-| `help` | Display built-in command help |
-| `exit` / `quit` | Exit the shell |
-
-------------------------------------------------------------------------
-
-## Platform Support
-
-MyShell is designed for **Unix-like environments** and depends on POSIX
-system calls such as:
-
--   `fork()`
--   `execve()`
--   `waitpid()`
-
-### Windows
-
-Windows users should run MyShell using **Windows Subsystem for Linux
-(WSL)** to ensure compatibility.
-
-Install WSL if needed:
-
-``` powershell
-wsl --install
+``` bash
+sudo pacman -S base-devel readline
 ```
 
-Then build and run MyShell inside the Linux environment.
+### macOS (Homebrew)
+
+``` bash
+brew install readline
+```
 
 ------------------------------------------------------------------------
 
-## Build Instructions
+## Build and Run
 
-### Using Make
+### Clone the repository
+
+``` bash
+git clone https://github.com/yourusername/myshell.git
+cd myshell
+```
+
+### Build
 
 ``` bash
 make
 ```
 
-### Manual Compilation
-
-``` bash
-gcc src/*.c -Iinclude -Wall -Wextra -lreadline -lncurses -o myshell
-```
-
-------------------------------------------------------------------------
-
-## Running
+### Run
 
 ``` bash
 ./myshell
 ```
 
+### Clean
+
+``` bash
+make clean
+```
+
 ------------------------------------------------------------------------
 
-## Project Structure
+## Example
 
-    include/        Header files
-    src/            Source files
-    Makefile        Build configuration
-    README.md       Project documentation
+``` bash
+[myshell]>> pwd
+/home/user
+
+[myshell]>> echo Hello World
+Hello World
+
+[myshell]>> ls
+file1.c  file2.txt
+```
+
+------------------------------------------------------------------------
+
+## Design Highlights
+
+-   Direct use of `execve()` for correct UNIX behavior
+-   Avoidance of race conditions in command execution
+-   Modular and extensible architecture
+-   Function pointer-based built-in command dispatch
+-   Clear separation between parsing, execution, and command logic
 
 ------------------------------------------------------------------------
 
 ## Author
 
-**Maniish Rajendran**
+Manu Raj
+
+------------------------------------------------------------------------
+
