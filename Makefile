@@ -1,6 +1,7 @@
 CC = gcc
 
 CFLAGS = -Wall -Wextra -Iinclude
+LDFLAGS = -lreadline -lncurses
 
 SRC = src/main.c \
       src/executor.c \
@@ -10,8 +11,10 @@ SRC = src/main.c \
 
 OUT = myshell
 
-all:
-	$(CC) $(SRC) $(CFLAGS) -o $(OUT)
+all: $(OUT)
+
+$(OUT): $(SRC)
+	$(CC) $(SRC) $(CFLAGS) $(LDFLAGS) -o $(OUT)
 
 clean:
 	rm -f $(OUT)
