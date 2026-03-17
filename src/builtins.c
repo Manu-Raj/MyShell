@@ -268,6 +268,7 @@ int command_about(char **args, char **env)
         "such as cd, pwd, echo, env, and exit.\n\n"
         "Developed by: Manu Raj\n"
         "---------------------------------------------------\n");
+        return 0;
 }
 
 int display_help(char **args, char **env)

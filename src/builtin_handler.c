@@ -15,10 +15,8 @@ builtin_cmd command_table[] = {
     {"quit", command_exit},
     {NULL, NULL}};
 
-int shell_builts(char **args, char **env, char *initial_directory)
+int shell_builts(char **args, char **env)
 {
-    (void)initial_directory;
-
     for (int i = 0; command_table[i].name != NULL; i++)
     {
         if (strcmp(args[0], command_table[i].name) == 0)

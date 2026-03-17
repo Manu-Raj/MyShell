@@ -1,11 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifndef MAX_INPUT
 #define MAX_INPUT 1024
+#endif
 
 // Shell format
 extern char *shell_format;
@@ -22,7 +27,7 @@ typedef struct
     int (*func)(char **args, char **env);
 } builtin_cmd;
 
-int shell_builts(char **args, char **env, char *initial_directory);
+int shell_builts(char **args, char **env);
 
 
 // builtins
