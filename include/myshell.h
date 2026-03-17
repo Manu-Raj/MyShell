@@ -7,6 +7,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <errno.h>
+
 
 #ifndef MAX_INPUT
 #define MAX_INPUT 1024
@@ -36,6 +38,7 @@ int command_pwd(char **args, char **env);
 int command_echo(char **args, char **env);
 int command_env(char **args, char **env);
 int command_about(char **args, char **env);
+int command_history(char **args, char **env);
 int command_custom(char **args, char **env);
 int command_which(char **args, char **env);
 int command_clear(char **args, char **env);

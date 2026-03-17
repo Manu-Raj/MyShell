@@ -139,6 +139,24 @@ int command_which(char **args, char **env)
     return 0;
 }
 
+int command_history(char **args, char **env)
+{
+    (void)args;
+    (void)env;
+
+    HIST_ENTRY **hist_list = history_list();
+
+    if (!hist_list)
+        return 0;
+
+    for (int i = 0; hist_list[i]; i++)
+    {
+        printf("%d  %s\n", i + history_base, hist_list[i]->line);
+    }
+
+    return 0;
+}
+
 int command_custom(char **args, char **env)
 {
     (void)args;
@@ -168,8 +186,7 @@ int command_custom(char **args, char **env)
         " 7   ┌─ user@host ~/dir\n"
         "     └─$\n"
         " 8   ╭─ user@host ~/dir\n"
-        "     ╰─$\n"
-    );
+        "     ╰─$\n");
 
     printf("\nSelect prompt style (1-8): ");
 
@@ -258,17 +275,24 @@ int command_about(char **args, char **env)
     (void)env;
     printf(
         "---------------------------------------------------\n"
-        "               MyShell\n"
+        "                     MyShell\n"
         "---------------------------------------------------\n"
-        "A minimal Unix-like command line shell written in C.\n"
-        "It demonstrates core OS concepts including process\n"
-        "creation (fork), program execution (execve), and\n"
-        "process management (waitpid).\n\n"
-        "Supports external commands and built-in commands\n"
-        "such as cd, pwd, echo, env, and exit.\n\n"
+        "A minimal Unix-like command line shell written in C.\n\n"
+        "Core Features:\n"
+        "  • Process creation using fork()\n"
+        "  • Program execution via execve()\n"
+        "  • Process synchronization using waitpid()\n"
+        "  • PATH-based command resolution (no access() pre-checks)\n"
+        "  • Built-in command dispatch using function pointers\n\n"
+        "Built-in Commands:\n"
+        "  cd, pwd, echo, env, history, clear, help, exit\n\n"
+        "Design Highlights:\n"
+        "  • Modular architecture (parser, executor, builtins)\n"
+        "  • Correct UNIX execution model (no TOCTOU issues)\n"
+        "  • Dynamic token parsing and memory management\n\n"
         "Developed by: Manu Raj\n"
         "---------------------------------------------------\n");
-        return 0;
+    return 0;
 }
 
 int display_help(char **args, char **env)
@@ -276,18 +300,26 @@ int display_help(char **args, char **env)
     (void)args;
     (void)env;
     printf(
-        "\nMyShell Built-in Commands:\n"
+        "\nMyShell - Built-in Commands\n"
         "------------------------------------------------------\n"
-        "  cd [dir]       Change the current directory\n"
-        "  pwd            Print the current working directory\n"
-        "  echo [text]    Display text in the terminal\n"
-        "  env            Show environment variables\n"
-        "  which [cmd]    Locate a command in PATH\n"
-        "  clear | cls    Clear the terminal screen\n"
-        "  custom         Customize the shell prompt style\n"
-        "  about          Display information about MyShell\n"
-        "  help           Display this help message\n"
-        "  exit | quit    Exit MyShell\n"
+        "  cd [dir]       Change current directory\n"
+        "                 • cd        → go to HOME\n"
+        "                 • cd -      → switch to previous dir\n\n"
+        "  pwd            Print current working directory\n\n"
+        "  echo [text]    Print arguments to standard output\n\n"
+        "  env            Display environment variables\n\n"
+        "  which [cmd]    Locate command in PATH (planned/partial)\n\n"
+        "  history        Show command history (readline)\n\n"
+        "  clear | cls    Clear the terminal screen\n\n"
+        "  custom         Change shell prompt style\n\n"
+        "  about          Display information about MyShell\n\n"
+        "  help           Show this help message\n\n"
+        "  exit | quit    Exit the shell\n"
+        "------------------------------------------------------\n"
+        "Execution Notes:\n"
+        "  • External commands are resolved via PATH\n"
+        "  • Uses execve() directly (no access() pre-check)\n"
+        "  • Reports accurate errors (e.g., permission denied)\n"
         "------------------------------------------------------\n");
     return 0;
 }

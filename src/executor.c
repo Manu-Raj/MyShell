@@ -52,6 +52,7 @@ int child_process(char **args, char **env)
     char *path_copy;
     char *dir;
     char full_path[1024];
+    int saw_eacces = 0;
 
     if (!args || !args[0])
         exit(0);
@@ -87,14 +88,21 @@ int child_process(char **args, char **env)
     {
         snprintf(full_path, sizeof(full_path), "%s/%s", dir, args[0]);
 
-        if (access(full_path, X_OK) == 0)
-            execve(full_path, args, env);
+        execve(full_path, args, env);
+
+        // only runs if execve fails
+        if (errno == EACCES)
+            saw_eacces = 1;
 
         dir = strtok(NULL, ":");
     }
 
     free(path_copy);
 
-    fprintf(stderr, "%s: command not found\n", args[0]);
+    if (saw_eacces)
+        fprintf(stderr, "%s: permission denied\n", args[0]);
+    else
+        fprintf(stderr, "%s: command not found\n", args[0]);
+
     exit(127);
 }

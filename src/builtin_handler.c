@@ -8,6 +8,7 @@ builtin_cmd command_table[] = {
     {"cls", command_clear},
     {"env", command_env},
     {"which", command_which},
+    {"history", command_history},
     {"help", display_help},
     {"about", command_about},
     {"custom", command_custom},
